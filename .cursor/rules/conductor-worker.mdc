@@ -17,12 +17,14 @@ Two jobs:
 
 ## Connect (two ways)
 
-**A — native MCP (recommended).** `.cursor/mcp.json` registers a `conductor` MCP server. Enable it in
-Cursor Settings → MCP, then call the tools directly (`list_projects`, `next_task`, `claim_task`, …).
-The bundled launcher mints a Google ID token via `gcloud` and bridges stdio↔the core over `mcp-remote`.
+**A — native MCP (recommended).** `.cursor/mcp.json` registers a `conductor` MCP server pointed at the
+mcp-gateway `/mcp` endpoint via `mcp-remote`. Enable it in Cursor Settings → MCP; on first use it opens a
+**browser OAuth sign-in** (Google account picker) — no `gcloud`, no tokens to manage. Then call the tools
+directly (`list_projects`, `next_task`, `claim_task`, …).
 
-**B — terminal scripts (always works).** Run the bundled scripts in Cursor's terminal — every
-`tool { … }` in this rule maps to `scripts/mcp.sh tool '{ … }'`:
+**B — terminal scripts (advanced / headless).** For CI or non-interactive runs, the bundled scripts mint
+a Google ID token with your own `gcloud` and call the core directly — every `tool { … }` in this rule
+maps to `scripts/mcp.sh tool '{ … }'`:
 
 ```bash
 eval "$(scripts/token.sh)"                 # exports CONDUCTOR_TOKEN (or set CONDUCTOR_AGENT_SA to mint)
@@ -31,7 +33,7 @@ scripts/mcp.sh list_projects '{}'
 scripts/mcp.sh next_task "{\"projectId\":\"$CONDUCTOR_PROJECT\",\"boardId\":\"$CONDUCTOR_BOARD\"}"
 ```
 
-Connection env (no values hardcoded except the hosted default URL):
+Connection env for the advanced script path (no values hardcoded except the hosted default URL):
 
 | env | meaning |
 |---|---|

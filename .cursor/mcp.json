@@ -1,12 +1,12 @@
 {
   "mcpServers": {
     "conductor": {
-      "command": "bash",
-      "args": ["scripts/cursor-mcp.sh"],
-      "env": {
-        "CONDUCTOR_CORE_URL": "https://conductor-core-hn5syhhsja-el.a.run.app",
-        "CONDUCTOR_AGENT_SA": ""
-      }
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote",
+        "https://conductor-mcp-hn5syhhsja-el.a.run.app/mcp"
+      ]
     }
   }
 }

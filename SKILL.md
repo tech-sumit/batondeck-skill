@@ -16,24 +16,28 @@ Two jobs:
 
 ## Connect
 
-Point your MCP client at the Conductor core's Streamable HTTP endpoint (`/mcp`), authenticating
-with a Google ID token whose **audience is the core service URL**.
+Point your MCP client at the Conductor **mcp-gateway** Streamable HTTP endpoint (`/mcp`). The
+mcp-gateway is an OAuth 2.1 Authorization Server, so a standards-compliant MCP client (Cursor,
+`mcp-remote`, the Claude MCP connectors) signs in for you via a **browser OAuth flow** — no `gcloud`,
+no tokens to manage.
 
-- **Endpoint:** `https://conductor-core-hn5syhhsja-el.a.run.app/mcp` (the hosted instance; for your
-  own deployment use `terraform -chdir=infra output -raw core_url` and append `/mcp`).
-- **Audience:** the same URL without `/mcp`.
-- **Header:** `Authorization: Bearer <id-token>`.
+- **Endpoint:** `https://conductor-mcp-hn5syhhsja-el.a.run.app/mcp` (the hosted instance; for your own
+  deployment use the mcp-gateway URL from `terraform -chdir=infra output -raw mcp_url` and append `/mcp`).
+- **Auth:** the client discovers the OAuth Authorization Server from the core's protected-resource
+  metadata (RFC 9728) → registers (DCR) → runs the browser authorization-code + PKCE flow (federated to
+  Google) → gets an access token automatically. You just pick your Google account in the browser.
 
-The core is **public at Cloud Run and enforces auth itself** (its own OAuth 2.0 resource server). An
-unauthenticated request gets `401` with an RFC 6750 `WWW-Authenticate` challenge, and the core serves
-OAuth 2.0 Protected Resource Metadata (RFC 9728) at `/.well-known/oauth-protected-resource` naming
-Google as the authorization server. Authorization is by **project membership**: a valid token with no
-membership sees nothing.
+Behind the scenes: the core (resource server) returns `401` with an RFC 6750 `WWW-Authenticate`
+challenge and serves OAuth 2.0 Protected Resource Metadata at
+`/.well-known/oauth-protected-resource`, naming the **mcp-gateway** as the authorization server.
+Authorization is by **project membership**: a valid sign-in with no membership sees nothing.
 
 This skill is a **self-contained package**: everything it needs is under `scripts/` (a minimal MCP
-caller, a token helper, a tasknet seeder, and the worker/fleet loops) and `references/`. The scripts
-are deployment-agnostic — set the connection via env (no values are hardcoded except the hosted
-default URL):
+caller, a token helper, a tasknet seeder, and the worker/fleet loops) and `references/`.
+
+**Advanced / headless (gcloud token path).** For CI or non-interactive runs you can skip the browser
+flow and mint a Google ID token yourself, calling the **core** directly. The scripts are
+deployment-agnostic — set the connection via env (no values hardcoded except the hosted default URL):
 
 | env | meaning |
 |---|---|
@@ -54,10 +58,10 @@ Your SA needs `roles/run.invoker` on the core (an operator grants this — e.g. 
 (`add_member { projectId, identityId, role: "agent" }`). Then discover work: `list_projects` →
 `list_boards`.
 
-**Calling tools.** If you have a native MCP client, invoke the tools directly. From a shell (or any
-non-MCP runtime) use the bundled caller — **every `tool { … }` call in this skill maps to
-`scripts/mcp.sh tool '{ … }'`** (it opens the session, attaches your token, prints the result). Auth
-once, then call:
+**Calling tools.** If you have a native MCP client (recommended), invoke the tools directly after the
+browser sign-in above. For the headless path, use the bundled caller — **every `tool { … }` call in
+this skill maps to `scripts/mcp.sh tool '{ … }'`** (it opens the session, attaches your token, prints
+the result). Auth once, then call:
 
 ```bash
 eval "$(scripts/token.sh)"                              # exports CONDUCTOR_TOKEN (or set CONDUCTOR_AGENT_SA)
