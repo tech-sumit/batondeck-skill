@@ -1,0 +1,9 @@
+# local task plans / scratch
+plan.json
+*.local.json
+.DS_Store
+
+# never commit minted tokens or creds
+*.token
+.env
+.env.*
