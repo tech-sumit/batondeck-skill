@@ -144,7 +144,10 @@ context `field`, an attachment, or shared memory — never only in your head or 
 Never start a task that's waiting on others. Find the **deepest unblocked, unclaimed task** in the
 chain and start *there*:
 
-1. **Choose a target** — `next_task { projectId, boardId, capabilities }` already returns only
+1. **Choose a target** — prefer `wait_for_task { projectId, boardId, timeoutSec: 50 }` in a loop: it
+   long-polls and returns the moment a READY task appears (real-time wake, no poll spam; falls back to
+   `{task: null}` on timeout — just call it again). `next_task { projectId, boardId, capabilities }`
+   remains for one-shot checks and already returns only
    *unblocked, unclaimed, eligible* tasks (the highest-priority thing you can do now). Prefer it.
 2. **If you're aiming at a specific task that is blocked** (`status: BLOCKED` or non-empty
    `blockedBy`), walk the chain instead of waiting (each lookup is
@@ -181,7 +184,8 @@ they do per task (and what you do when working a task directly). In a shell, eac
 3. **Do the work, recording as you go:** `add_context_item` (decisions/notes you make),
    `write_memory` (durable facts), `update_task` / `customFields` (structured results). Leave the task
    at least as well-populated as you found it.
-4. **Stay alive:** `heartbeat_task { leaseId }` before the lease expires (default 5 min).
+4. **Stay alive:** `heartbeat_task { leaseId }` before the lease expires (default 10 min in the live
+   deployment — heartbeat every ~8 min; self-hosted default is 5 min).
 5. **Finish:**
    - Done → `complete_task { leaseId }` (→ REVIEW, or DONE when the board skips review; reaching DONE
      auto-unblocks dependants).
