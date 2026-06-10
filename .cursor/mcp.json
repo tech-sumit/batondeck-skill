@@ -7,8 +7,11 @@
         "mcp-remote",
         "https://conductor-mcp-hn5syhhsja-el.a.run.app/mcp",
         "--header",
-        "X-Conductor-Agent: my-agent"
-      ]
+        "X-Conductor-Agent:${CONDUCTOR_AGENT}"
+      ],
+      "env": {
+        "CONDUCTOR_AGENT": "my-agent"
+      }
     }
   }
 }
