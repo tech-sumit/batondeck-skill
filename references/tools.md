@@ -1,4 +1,4 @@
-# Conductor tool reference
+# BatonDeck tool reference
 
 Connect over Streamable HTTP at the core's `/mcp` endpoint
 (`https://conductor-core-hn5syhhsja-el.a.run.app/mcp` for the hosted instance) with an

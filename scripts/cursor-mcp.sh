@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# conductor-skill — native MCP launcher for Cursor (and any stdio MCP client).
+# batondeck-skill — native MCP launcher for Cursor (and any stdio MCP client).
 # Mints a Google ID token (audience = core URL) and bridges the client's stdio MCP transport to the
-# Conductor core's Streamable HTTP /mcp endpoint via `mcp-remote`. The token lasts ~1h — restart the
+# BatonDeck core's Streamable HTTP /mcp endpoint via `mcp-remote`. The token lasts ~1h — restart the
 # MCP server in Cursor (Settings → MCP → reload) to refresh it.
 #
 # Env (same as the other scripts):

@@ -1,9 +1,9 @@
-> **Superseded by [conductor-plugin](https://github.com/tech-sumit/conductor-plugin)** — the installable plugin (Claude Code + Cursor marketplaces, release zips) built from this content. This repo remains as the source archive.
+> **Superseded by [conductor-plugin](https://github.com/tech-sumit/batondeck-plugin)** — the installable plugin (Claude Code + Cursor marketplaces, release zips) built from this content. This repo remains as the source archive.
 
-# conductor-skill
+# batondeck-skill
 
-An installable agent skill for **[Conductor](https://github.com/tech-sumit/conductor)** — the
-MCP-native task orchestrator. It teaches your coding agent to **plan** work onto a shared Conductor
+An installable agent skill for **[BatonDeck](https://github.com/tech-sumit/batondeck)** — the
+MCP-native task orchestrator. It teaches your coding agent to **plan** work onto a shared BatonDeck
 Kanban board (a richly-detailed dependency tree) and **work** it autonomously over MCP — claiming
 tasks, loading each task's full context, doing the work, and auto-unblocking what comes next — safely
 alongside other agents and humans.
@@ -17,22 +17,22 @@ script path is kept as an optional advanced/headless option.
 
 - `node`/`npx` — the Cursor MCP server uses `mcp-remote`, which drives the OAuth browser flow.
 - A Google account. On first connect you'll get a browser sign-in (Google account picker) — that's it.
-- Membership in a Conductor project. An operator adds you with
+- Membership in a BatonDeck project. An operator adds you with
   `add_member { projectId, identityId: "<your-email-or-SA>", role: "agent" | "member" | "admin" }`.
   (A valid sign-in with no membership sees nothing — authorization is by project membership.)
 - *(Advanced / headless only)* `gcloud` authenticated (`gcloud auth login`), for the optional
   token-minting script path. For an **agent service account** add it with `add_member` and grant it
-  `roles/run.invoker` on the core (the Conductor repo's `scripts/onboard-agent.sh <sa-email>` does both).
+  `roles/run.invoker` on the core (the BatonDeck repo's `scripts/onboard-agent.sh <sa-email>` does both).
 
 ## Install — Cursor
 
 1. Clone this repo into (or beside) your project so `.cursor/` and `scripts/` are at the project root:
    ```bash
-   git clone https://github.com/tech-sumit/conductor-skill
+   git clone https://github.com/tech-sumit/batondeck-skill
    # then copy .cursor/ and scripts/ to your project root, or work inside this repo
    ```
-2. **Rule** — `.cursor/rules/conductor-worker.mdc` is picked up automatically; Cursor's agent applies
-   it whenever you ask it to plan or work the Conductor board.
+2. **Rule** — `.cursor/rules/batondeck-worker.mdc` is picked up automatically; Cursor's agent applies
+   it whenever you ask it to plan or work the BatonDeck board.
 3. **MCP server** — enable `conductor` in **Cursor Settings → MCP**. `.cursor/mcp.json` already points
    `mcp-remote` at the hosted MCP endpoint (`https://conductor-mcp-…/mcp`); on first use Cursor opens a
    browser to sign in with Google, then the tools are available natively. To point at a different core URL, change
@@ -44,11 +44,11 @@ script path is kept as an optional advanced/headless option.
 Make this repo a skill (it has `SKILL.md` at the root):
 
 ```bash
-git clone https://github.com/tech-sumit/conductor-skill \
-  ~/.claude/skills/conductor-worker          # user-level; or <project>/.claude/skills/conductor-worker
+git clone https://github.com/tech-sumit/batondeck-skill \
+  ~/.claude/skills/batondeck-worker          # user-level; or <project>/.claude/skills/batondeck-worker
 ```
 
-Claude Code loads `conductor-worker` automatically when a task matches its description.
+Claude Code loads `batondeck-worker` automatically when a task matches its description.
 
 ## Quickstart — advanced (terminal scripts + gcloud, for headless/CI)
 
@@ -69,7 +69,7 @@ Every `tool { … }` in the rule/skill maps to `scripts/mcp.sh tool '{ … }'`.
 
 | Path | Purpose |
 |---|---|
-| `.cursor/rules/conductor-worker.mdc` | Cursor rule — the planner/worker playbook |
+| `.cursor/rules/batondeck-worker.mdc` | Cursor rule — the planner/worker playbook |
 | `.cursor/mcp.json` | Cursor MCP server (`conductor`) — `mcp-remote` → the mcp-gateway `/mcp` (OAuth browser flow) |
 | `SKILL.md` | Claude Code skill (same playbook) |
 | `references/tools.md` | Full MCP tool list + error codes |

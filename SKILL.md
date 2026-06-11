@@ -1,11 +1,11 @@
 ---
-name: conductor-worker
-description: Plan and work a Conductor Kanban board as an autonomous agent over MCP. Decompose goals into a richly-detailed dependency tree on the board, populate every task as a complete self-contained brief, resolve blockers depth-first (work what unblocks the most, in order), carry each task's context/memory/dependencies/attachments before acting, and run a FLEET of workers to drain the board at maximum concurrency — the dependency tree gates parallel vs sequential automatically, and completing a task auto-unblocks more — alongside other agents and humans. Includes shell/Python orchestration scripts.
+name: batondeck-worker
+description: Plan and work a BatonDeck Kanban board as an autonomous agent over MCP. Decompose goals into a richly-detailed dependency tree on the board, populate every task as a complete self-contained brief, resolve blockers depth-first (work what unblocks the most, in order), carry each task's context/memory/dependencies/attachments before acting, and run a FLEET of workers to drain the board at maximum concurrency — the dependency tree gates parallel vs sequential automatically, and completing a task auto-unblocks more — alongside other agents and humans. Includes shell/Python orchestration scripts.
 ---
 
-# Conductor Worker
+# BatonDeck Worker
 
-You are an agent that **plans** work onto a shared Conductor board and **works** it over the Model
+You are an agent that **plans** work onto a shared BatonDeck board and **works** it over the Model
 Context Protocol. Humans and other agents share this board, so coordinate through **claims/leases**
 and **optimistic concurrency** — never edit a task you don't hold the lease for.
 
@@ -16,7 +16,7 @@ Two jobs:
 
 ## Connect
 
-Point your MCP client at the Conductor **mcp-gateway** Streamable HTTP endpoint (`/mcp`). The
+Point your MCP client at the BatonDeck **mcp-gateway** Streamable HTTP endpoint (`/mcp`). The
 mcp-gateway is an OAuth 2.1 Authorization Server, so a standards-compliant MCP client (Cursor,
 `mcp-remote`, the Claude MCP connectors) signs in for you via a **browser OAuth flow** — no `gcloud`,
 no tokens to manage.
@@ -53,7 +53,7 @@ gcloud auth print-identity-token --impersonate-service-account="<agent-sa-email>
   --audiences="$CONDUCTOR_CORE_URL"
 ```
 
-Your SA needs `roles/run.invoker` on the core (an operator grants this — e.g. the Conductor repo's
+Your SA needs `roles/run.invoker` on the core (an operator grants this — e.g. the BatonDeck repo's
 `onboard-agent.sh <agent-sa-email>`) and must be a member of a project
 (`add_member { projectId, identityId, role: "agent" }`). Then discover work: `list_projects` →
 `list_boards`.
@@ -215,7 +215,7 @@ how many can actually run, and that number **grows as work completes**:
   ```bash
   export CONDUCTOR_AGENT_SA=my-agent@proj.iam.gserviceaccount.com   # or CONDUCTOR_TOKEN=<id-token>
   export CONDUCTOR_PROJECT=P-…  CONDUCTOR_BOARD=B-…
-  export AGENT_CMD='claude -p "Work Conductor task $1 (lease $2) per the conductor-worker skill: \
+  export AGENT_CMD='claude -p "Work BatonDeck task $1 (lease $2) per the batondeck-worker skill: \
                      get_task_context, do it, heartbeat, then complete_task (or block/handoff)."'
   MAX_AGENTS=12 scripts/fleet.sh                      # or MAX_AGENTS=auto (default)
   ```

@@ -1,12 +1,12 @@
 ---
-description: Plan and work a Conductor Kanban board as an autonomous agent over MCP. Use when the user asks to plan/decompose work onto Conductor, pick up or work Conductor tasks, run a fleet of workers, or otherwise drive the shared Conductor board. Decompose goals into a richly-detailed dependency tree, populate every task as a complete self-contained brief, resolve blockers depth-first, carry each task's context/memory/deps/attachments before acting, and coordinate via claims/leases alongside other agents and humans.
+description: Plan and work a BatonDeck Kanban board as an autonomous agent over MCP. Use when the user asks to plan/decompose work onto BatonDeck, pick up or work BatonDeck tasks, run a fleet of workers, or otherwise drive the shared BatonDeck board. Decompose goals into a richly-detailed dependency tree, populate every task as a complete self-contained brief, resolve blockers depth-first, carry each task's context/memory/deps/attachments before acting, and coordinate via claims/leases alongside other agents and humans.
 globs:
 alwaysApply: false
 ---
 
-# Conductor Worker (Cursor)
+# BatonDeck Worker (Cursor)
 
-You **plan** work onto a shared Conductor board and **work** it over the Model Context Protocol.
+You **plan** work onto a shared BatonDeck board and **work** it over the Model Context Protocol.
 Humans and other agents share this board, so coordinate through **claims/leases** and **optimistic
 concurrency** — never edit a task you don't hold the lease for.
 
@@ -133,7 +133,7 @@ the mutex); completing a task **auto-unblocks** dependants, widening the frontie
 ```bash
 export CONDUCTOR_AGENT_SA=my-agent@proj.iam.gserviceaccount.com   # or CONDUCTOR_TOKEN=<id-token>
 export CONDUCTOR_PROJECT=P-…  CONDUCTOR_BOARD=B-…
-export AGENT_CMD='cursor-agent -p "Work Conductor task $1 (lease $2) per the conductor-worker rule: \
+export AGENT_CMD='cursor-agent -p "Work BatonDeck task $1 (lease $2) per the batondeck-worker rule: \
                   get_task_context, do it, heartbeat, then complete_task (or block/handoff)."'
 MAX_AGENTS=12 scripts/fleet.sh                      # or MAX_AGENTS=auto (default)
 ```

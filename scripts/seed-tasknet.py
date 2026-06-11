@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""conductor-worker skill — plant a dependency-tree "tasknet" on a Conductor board from a JSON plan,
-in ONE MCP session. Self-contained; works against any Conductor deployment.
+"""batondeck-worker skill — plant a dependency-tree "tasknet" on a BatonDeck board from a JSON plan,
+in ONE MCP session. Self-contained; works against any BatonDeck deployment.
 
 Plan JSON (file arg or stdin):
 {
